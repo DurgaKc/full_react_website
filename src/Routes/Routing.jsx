@@ -8,6 +8,7 @@ import PasswordChange from '../Pages/Admin/PasswordChange'
 import NavbarAdmin from '../Components/NavbarAdmin'
 import TeamList from '../Pages/Admin/Team/TeamList'
 import AddTeam from '../Pages/Admin/Team/AddTeam'
+import EditTeam from '../Pages/Admin/Team/EditTeam'
 
 
 const Routing = () => {
@@ -22,6 +23,7 @@ const Routing = () => {
             <Route path='/home' element={<HomeLogin/>}/>
             <Route path='/team' element={<TeamList/>}/>
             <Route path='/addTeam' element={<AddTeam/>}/>
+            <Route path='/editTeam' element={<EditTeam/>}/>
             <Route path='/navbaradmin' element={<NavbarAdmin/>}/>
             <Route path='/password' element={<PasswordChange/>}/>
             <Route path='/logout' element={<Logout/>}/>

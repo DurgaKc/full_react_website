@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import NavbarAdmin from "../../../Components/NavbarAdmin";
 import {
-    Button,
+  Button,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -17,6 +17,19 @@ import {
 } from "@mui/material";
 
 const AddTeam = () => {
+  const [category, setCategory] = useState("");
+  const [subCategory, setSubCategory] = useState("");
+
+  const options = {
+    "Committe Member": ["Chairman", "Vice-Chairman", "Member"],
+    "Teaching Staff": ["Campus chief", "Ast Campus Chief", "Professor", "Lecturer"],
+    "Non-teaching Staff": ["Information Officer", "Accountant", "Librarian"],
+  };
+
+  const handleTypeChange = (event) => {
+    setCategory(event.target.value);
+    setSubCategory(""); //reset sub-category in type change
+  };
   return (
     <>
       <NavbarAdmin />
@@ -113,22 +126,29 @@ const AddTeam = () => {
             <Grid item xs={12} sm={6} md={3}>
               <FormControl fullWidth size="small">
                 <InputLabel>Type</InputLabel>
-                <Select id="type" label="Type" required>
-                  <MenuItem value="Mr.">Committe Member</MenuItem>
-                  <MenuItem value="Mrs.">Teaching Staff</MenuItem>
-                  <MenuItem value="Miss.">Non-teaching Staff</MenuItem>
+                <Select value="category" label="Type" onChange={handleTypeChange} required>
+                  <MenuItem value="Committe Member">Committe Member</MenuItem>
+                  <MenuItem value="Teaching Staff">Teaching Staff</MenuItem>
+                  <MenuItem value="Non-teaching Staff">
+                    Non-teaching Staff
+                  </MenuItem>
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <FormControl fullWidth size="small">
+              <FormControl fullWidth size="small" disabled={!type}>
                 <InputLabel>Sub-category</InputLabel>
-                <Select id="sub-category" label="Sub-category" required>
-                  <MenuItem value="Mr.">Mr.</MenuItem>
-                  <MenuItem value="Mrs.">Mrs.</MenuItem>
-                  <MenuItem value="Miss.">Miss.</MenuItem>
-                  <MenuItem value="Professor">Professor</MenuItem>
-                  <MenuItem value="Professor Dr.">Professor Dr.</MenuItem>
+                <Select
+                  value={subCategory}
+                  label="Sub-category"
+                  onChange={(e) => setSubCategory(e.target.value)}
+                  required
+                >
+                  {(options[type] || []).map((option, index) => (
+                    <MenuItem key={index} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -184,6 +204,7 @@ const AddTeam = () => {
               <TextField
                 fullWidth
                 type="file"
+                name="ppImage"
                 size="small"
                 accept="image/*"
                 label="Member Image"
@@ -235,11 +256,7 @@ const AddTeam = () => {
               />
             </Grid>
             <Grid sx={{ margin: 2 }}>
-                <Button
-                variant="contained"
-                >
-                    Add member
-                </Button>
+              <Button variant="contained">Add member</Button>
             </Grid>
           </Grid>
         </Paper>

@@ -68,7 +68,7 @@ const Navbar = () => {
         </div>
 
         {/* Flag Right (Hidden on mobile) */}
-        <div className="flag h-24 mr-18 hidden md:block">
+        <div className="flag h-29 mr-18 hidden md:block">
           <img src="/flag.gif" className="h-26 w-30" alt="Nepal Flag" />
         </div>
       </Box>
