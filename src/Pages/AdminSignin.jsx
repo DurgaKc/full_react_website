@@ -1,37 +1,66 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import {
   Box,
   Button,
   TextField,
   Typography,
-  IconButton,
   InputAdornment,
   Paper,
 } from "@mui/material";
+import { useState } from "react";
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 import Navbar from "../Components/navbar";
+import { useAuth } from "../context/AuthContextProvider";
 
-const LoginForm = () => {
+const AdminSignin = () => {
+  const { login } = useAuth()
+  const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false);
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
+ const [formData, setFormData] = useState({
+    email: '',
+    password: '',
   });
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const {name, value} = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+   
   };
 
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
-    // Add your login logic here
+   try{
+    // Sending POST request to the backend
+    const response = await axios.post(`${BASE_URL}/admin/signin`,{
+      email: formData.email,
+      password: formData.password,
+    });
+    const token = response.data.token;
+    const role = response.data.user.role;
+    const email = response.data.user.email;
+    const userName = response.data.user.userName;
+   
+   login({email, role, token, userName})
+   toast.success('Login Successful', { autoClose: 600 })
+   setTimeout(()=>{
+    navigate('/home')
+   }, 600)
+  } catch(error){
+    
+    toast.error('No user found', { autoClose: 200 })
+    console.error('Error during login:', error.response?.data || error.message);
+
+  }
   };
 
   return (
     <>
-      {" "}
+    
       <Navbar />
       <Typography
         variant="h6"
@@ -66,9 +95,10 @@ const LoginForm = () => {
             <TextField
               name="email"
               type="email"
+               id="login_email"
               fullWidth
               placeholder="Enter your email"
-              value={form.email}
+              value={formData.email}
               onChange={handleChange}
               sx={{
                 mb: 2,
@@ -91,7 +121,8 @@ const LoginForm = () => {
               type={showPassword ? "text" : "password"}
               fullWidth
               placeholder="Enter password"
-              value={form.password}
+                id="login_password"
+              value={formData.password}
               onChange={handleChange}
               sx={{
                 mb: 3,
@@ -141,4 +172,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default AdminSignin;

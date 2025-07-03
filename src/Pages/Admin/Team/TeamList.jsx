@@ -17,30 +17,45 @@ import {
 import { Link } from "react-router-dom";
 import axios from "axios";
 import EditTeam from "./EditTeam";
+import DeleteTeam from "./DeleteTeam";
 
-const TeamList = () => {
+const imageUrl = import.meta.env.VITE_UPLOAD_URL;
+const backendUrl = import.meta.env.VITE_BASE_URL;
+
+const TeamList = ({id}) => {
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [teamData, setTeamData] = useState([]);
   const [selectedTeamId, setSelectedTeamId] = useState(null);
 
-  const handleEdit = (id) => {
-    setSelectedTeamId(id);
-    console.log(id);
-    setOpenEditDialog(true);
-  };
-
   const getTeamData = async () => {
     try {
-      const response = await axios.get("http://192.168.1.67:5001/api/teams");
+      const response = await axios.get(`${backendUrl}/teams`);
       setTeamData(response.data);
     } catch (error) {
       console.error("Error fetching team data:", error);
     }
   };
-
   useEffect(() => {
     getTeamData();
   }, []);
+  console.log("ppImage");
+  console.log(teamData);
+
+  const handleCloseDialog = () => {
+    setOpenEditDialog(false);
+    setOpenDeleteDialog(false)
+    getTeamData();
+  };
+
+  const handleEdit = (id) => {
+    setSelectedTeamId(id);
+    setOpenEditDialog(true);
+  };
+  const handleDelete = (id) =>{
+   setSelectedTeamId(id);
+   setOpenDeleteDialog(true)
+  }
   return (
     <>
       <NavbarAdmin />
@@ -134,8 +149,7 @@ const TeamList = () => {
                   </TableCell>
                   <TableCell sx={{ border: "1px solid #c2c2c2" }}>
                     <img
-                      // src={item.ppImage}
-                       src="https://static.vecteezy.com/system/resources/thumbnails/057/068/323/small/single-fresh-red-strawberry-on-table-green-background-food-fruit-sweet-macro-juicy-plant-image-photo.jpg"
+                      src={`${imageUrl}/team/${item.ppImage}`}
                       alt="Profile"
                       style={{
                         width: "50px",
@@ -159,6 +173,7 @@ const TeamList = () => {
                     <Button
                       size="small"
                       sx={{ mx: 1, padding: "2px", color: "red" }}
+                       onClick={() => handleDelete(item.id)}
                     >
                       Delete
                     </Button>
@@ -171,11 +186,23 @@ const TeamList = () => {
         {/* Edit dialog */}
         <Dialog
           open={openEditDialog}
-          onClose={() => setOpenEditDialog(false)}
+          onClose={handleCloseDialog}
           maxWidth="lg"
           fullWidth
         >
-          <EditTeam id={selectedTeamId} />
+          <EditTeam id={selectedTeamId} onClose={handleCloseDialog} />
+        </Dialog>
+        {/* delete dialog */}
+        <Dialog
+        open={openDeleteDialog}
+         maxWidth="md"
+          onClose={handleCloseDialog}
+        >
+          <DeleteTeam
+          getTeamData={getTeamData}
+          id={selectedTeamId}
+          onClose={handleCloseDialog}
+          />
         </Dialog>
       </Grid>
     </>

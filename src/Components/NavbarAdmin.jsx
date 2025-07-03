@@ -1,11 +1,14 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Box, Grid } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RiArrowDropDownLine } from "react-icons/ri";
+import { toast } from "react-toastify";
+import ThemeToggle from "../ThemeToggle";
 
-const NavbarAdmin = () => {
+const NavbarAdmin = () => {  
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
 
@@ -51,6 +54,14 @@ const NavbarAdmin = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [openDropdown]);
 
+   const navigate = useNavigate();
+  const handleLogout =  () =>{
+    localStorage.clear();
+    toast.success('Successfully logged out', { autoClose: 300 });
+    setTimeout(()=>{
+      navigate('/login');
+    }, 500);
+  }
   return (
     <Grid>
       {/* Top Navbar */}
@@ -153,9 +164,14 @@ const NavbarAdmin = () => {
                   Signed in as <p>campus@1233.com</p>
                 </div>
                 <Link to="/password" className="block px-4 py-2 hover:text-orange-500">Password Change</Link>
-                <Link to="/logout" className="block px-4 py-2 hover:text-orange-500">Logout</Link>
+                <button
+                onClick={handleLogout}
+                 className="block px-4 py-2 hover:text-orange-500">Logout</button>
               </div>
             )}
+          </li>
+          <li>
+            <ThemeToggle/>
           </li>
         </ul>
       </Grid>

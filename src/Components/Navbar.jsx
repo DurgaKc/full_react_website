@@ -1,12 +1,14 @@
-import React, { useEffect, useState, useRef } from "react";
-import {Paper, Box, Grid } from "@mui/material";
+import { useEffect, useState, useRef } from "react";
+import {Box, Grid } from "@mui/material";
 import { Link } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import { IoPerson } from "react-icons/io5";
+import ThemeToggle from "../ThemeToggle";
 
-const Navbar = () => {
+const Navbar = ( ) => {
+ 
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Mobile menu toggle
   const [openDropdown, setOpenDropdown] = useState(null); // Tracks which dropdown is open
 
@@ -23,7 +25,7 @@ const Navbar = () => {
     { href: "/downloads", label: "Downloads" },
     { href: "/curriculum", label: "Curriculum" },
     { href: "/gallery", label: "Gallery" },
-    { href: "/navbaradmin", label: "Contact Us" },
+    // { href: "/contact-us", label: "Contact Us" },
   ];
 
   // Close dropdown on outside click
@@ -74,7 +76,7 @@ const Navbar = () => {
       </Box>
 
       {/* Nav Links with Hamburger Menu */}
-      <Grid className="nav-links px-4 py-2 flex flex-col md:flex-row items-start md:items-center dark:bg-sky-700 text-white">
+      <Grid className="nav-links px-4 py-2 flex flex-col md:flex-row items-start md:items-center dark:bg-sky-700 text-white overflow-auto">
         
         {/* Mobile Menu Toggle */}
         <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden mb-2">
@@ -86,8 +88,7 @@ const Navbar = () => {
         </button>
 
         {/* Navigation Links */}
-        <ul className={`flex-col md:flex md:flex-row ${isMenuOpen ? "flex" : "hidden"} md:gap-6`}>
-          
+        <ul className={`flex-col md:flex md:flex-row ${isMenuOpen ? "flex" : "hidden"} md:gap-6`}>         
           <li>
             <Link to="/"
               className="mr-2 hover:text-orange-500 ml-10 cursor-pointer"
@@ -108,23 +109,13 @@ const Navbar = () => {
             </button>
 
             {openDropdown === "about" && (
-              <div
-                ref={aboutRef}
-                className="absolute z-10 mt-2 w-32 bg-white shadow-lg rounded dark:bg-sky-700 text-black dark:text-white"
-              >
-                <Link to="/introduction" className="block px-4 py-2 hover:text-orange-500">
-                  Introduction
-                </Link>
-                <Link to="/team" className="block px-4 py-2 hover:text-orange-500">
-                  Our Team
-                </Link>
-                <Link to="/faq" className="block px-4 py-2 hover:text-orange-500">
-                  FAQ
-                </Link>
-              </div>
-            )}
-          </li>
-          {/* contents dropdown */}
+               <div ref={aboutRef} className="absolute z-10 mt-2 w-32 bg-white shadow-lg rounded dark:bg-sky-700 text-black dark:text-white">
+                 <Link to="/introduction" className="block px-4 py-2 hover:text-orange-500">Introduction</Link>
+                 <Link to="/team" className="block px-4 py-2 hover:text-orange-500"> Our Team</Link>
+                 <Link to="/faq" className="block px-4 py-2 hover:text-orange-500">FAQ</Link>
+               </div>
+            )}</li>
+          {/*contents dropdown */}
           <li className="relative ">
             <button
             type="button"
@@ -138,7 +129,7 @@ const Navbar = () => {
             {openDropdown === 'contents' && (
               <div
                 className="absolute z-10 mt-2 w-32 dark:bg-sky-700 font-normal text-white"
-                to={contentsRef}
+                ref={contentsRef}
               >
                 <Link
                   to="/publication"
@@ -158,7 +149,7 @@ const Navbar = () => {
           </li>
           {navLinks.map((link, index)=>(
               <li key={index}>
-                <Link to={link.href} className=" mr-3 hover:text-orange-500">
+                <Link to={link.href} className=" hover:text-orange-500">
                 {link.label}
                 </Link>
               </li>
@@ -169,6 +160,10 @@ const Navbar = () => {
               Login
             </Link>
           </li>
+            <li>
+              <ThemeToggle/>            
+          </li> 
+          
         </ul>
       </Grid>
     </Grid>
